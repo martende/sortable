@@ -25,6 +25,7 @@ def loadJson(filename,normedFields):
         if k not in p:
           sys.stderr.write("Error:%s\n" %p)
           raise Exception("no %s field in '%s' linenum:%d" % (k,filename,i))
+        p[k + "_orig"] = p[k]
         p[k] = normalize(p[k])
       ret.append(p)
   except Exception:
@@ -205,8 +206,8 @@ def scoreData(products,listinigs,revIdx):
 def writeResult(products):
   def cleanListing(l):
     return {
-      "title": l["title"],
-      "manufacturer": l["manufacturer"],
+      "title": l["title_orig"],
+      "manufacturer": l["manufacturer_orig"],
       "currency": l["currency"],
       "price": l["price"]
     }
@@ -215,7 +216,7 @@ def writeResult(products):
     listings = []
     if "listings" in p:
       listings = [cleanListing(l) for l in p["listings"] ]
-    r = { "product_name": p['product_name'] , "listings" : listings}
+    r = { "product_name": p['product_name_orig'] , "listings" : listings}
     f.write(json.dumps(r) + "\n")
   f.close()
 
